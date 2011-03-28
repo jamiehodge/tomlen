@@ -13,4 +13,5 @@ PLATFORMS
 
 DEPENDENCIES
   haml
+  rack
   sinatra
