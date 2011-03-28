@@ -3,15 +3,25 @@ Tomlen
 
 A simple Sinatra webapp to generate and display thumbnails from QuickTime movie files.
 
-# Requirements
+## Requirements
 
 Tomlen leverages Apple's Podcast Producer middleware and is therefore OSX only.
 
-# TODO
+## Installation
+
+* Download and install [homebrew](https://github.com/mxcl/homebrew)
+* Install git: `brew install git`
+* Install tomlen: `git clone git://github.com/jamiehodge/tomlen.git`
+* Install bundler: `sudo gem install bundler`
+* Install gems: `cd tomlen`, `bundle install`
+* Run tomlen: `arch -arch i386 rackup`
+* Open browser: [http://localhost:9292](http://localhost:9292)
+
+## TODO
 
 Move thumbnails generation to a background task.
 
-# License
+## License
 
 The MIT License
 
