@@ -1,0 +1,10 @@
+%h1 Upload
+%form{ :action => url('/movies'), :method => 'post', :enctype => 'multipart/form-data' }
+	%p
+		%input{ :type => 'text', :name => 'title', :placeholder => 'Title' }
+	%p
+		%textarea{ :name => 'description', :required => true, :placeholder => 'Description' }
+	%p
+		%input{ :type => 'file', :name => 'file' }
+	%p
+		%input{ :type => 'submit' }

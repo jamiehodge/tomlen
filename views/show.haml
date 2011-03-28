@@ -1,0 +1,23 @@
+%nav
+	%ul
+		%li
+			%a{ :href => url('/movies') } Back to Index
+			
+%h1= @movie.title
+
+%section
+	%h2 Preview
+	%img#preview{:src => @movie.thumbnail_urls.first, :width => 400 }
+
+%section
+	%h2 Download
+	%ul
+		%li
+			%a{ :href => @movie.original_url } Original
+		%li#thumbnails
+			Thumbnails
+			%ol
+				- @movie.thumbnail_urls.each do |thumbnail|
+					%li
+						%a{ :href => thumbnail }= thumbnail.split('/').last
+	

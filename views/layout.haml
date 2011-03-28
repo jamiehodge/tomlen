@@ -1,0 +1,31 @@
+%html
+	%head
+	
+		%meta{ :charset => 'utf-8' }
+		
+		%meta{ :content => 'A simple thumbnail generator', :name => 'description' }
+		%meta{ :content => 'Jamie Hodge', :name => 'author' }
+		
+		%meta{ :content => 'width=device-width, initial-scale=1.0', :name => 'viewport' }
+		
+		%script{ :src => url('/js/modernizr.min.js') }
+		
+	%body
+		%header
+			%h1 Thumbnail generator
+			
+		= yield
+		
+		%footer
+			%p
+				Copyright &copy; #{Time.now.year}
+		
+		:javascript
+			yepnope([{
+				load: 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'
+			},{
+				load: '#{url('/js/jquery.iskip.js')}',
+				complete: function() {
+					$('#preview').iskip({images: $('#thumbnails li a'), method: 'mousemove' });
+				}
+			}]);
