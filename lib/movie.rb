@@ -13,8 +13,8 @@ class Movie
 	def self.create(input, metadata={})
 		self.new(`uuidgen`.strip) do
 			create_directories
-			save_original(input)
 			save_metadata(metadata)
+			save_original(input)
 			create_thumbnails
 		end
 	end
@@ -41,11 +41,11 @@ class Movie
 	end
 	
 	def original
-		File.join base_dir, "#{uuid}.mov"
+		File.join base_dir, "#{uuid}#{metadata[:extension]}"
 	end
 	
 	def original_url
-		File.join base_url, "#{uuid}.mov"
+		File.join base_url, "#{uuid}#{metadata[:extension]}"
 	end
 	
 	def duration

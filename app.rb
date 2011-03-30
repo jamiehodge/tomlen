@@ -31,7 +31,7 @@ get '/movies' do
 end
 
 post '/movies' do
-	movie = Movie.create(params[:file][:tempfile].path, :title => params[:title], :description => params[:description] )
+	movie = Movie.create(params[:file][:tempfile].path, :title => params[:title], :description => params[:description], :extension => File.extname(params[:file][:filename]) )
 	redirect to "/movies/#{movie.uuid}"
 end
 
