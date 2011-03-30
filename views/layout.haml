@@ -14,18 +14,9 @@
 		%header
 			%h1 Thumbnail generator
 			
-		= yield
+		#main
+			= yield
 		
 		%footer
 			%p
 				Copyright &copy; #{Time.now.year}
-		
-		:javascript
-			yepnope([{
-				load: 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'
-			},{
-				load: '#{url('/js/jquery.iskip.js')}',
-				complete: function() {
-					$('#preview').iskip({images: $('#thumbnails li a'), method: 'mousemove' });
-				}
-			}]);

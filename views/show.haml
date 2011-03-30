@@ -20,4 +20,14 @@
 				- @movie.thumbnail_urls.each do |thumbnail|
 					%li
 						%a{ :href => thumbnail }= thumbnail.split('/').last
+
+:javascript
+	yepnope([{
+		load: 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'
+	},{
+		load: '#{url('/js/jquery.iskip.js')}',
+		complete: function() {
+			$('#preview').iskip({images: $('#thumbnails li a'), method: 'mousemove' });
+		}
+	}]);
 	

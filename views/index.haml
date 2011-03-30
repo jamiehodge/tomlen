@@ -15,3 +15,16 @@
 					%form{ :action => url("/movies/#{movie.uuid}"), :method => "post", :style => 'display: inline;' }
 						%input{ :type => 'hidden', :name => '_method', :value => 'delete' }
 						%input{ :type => 'submit', :value => 'Delete' }
+
+-
+:javascript
+	yepnope([{
+		load: 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'
+	},{
+		load: '#{url('/js/jquery.iskip.js')}',
+		complete: function() {
+			setInterval(function() {
+				$("#main").load('#{url('/movies')}');
+			}, 9000);
+		}
+	}]);
