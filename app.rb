@@ -27,12 +27,20 @@ end
 
 get '/movies' do
 	@movies = Dir.glob("public/movies/*").map { |f| Movie.new(File.basename(f)) }
-	haml :index
+	haml :index, :layout => !request.xhr?
 end
 
 post '/movies' do
-	movie = Movie.create(params[:file][:tempfile].path, :title => params[:title], :description => params[:description], :extension => File.extname(params[:file][:filename]) )
-	redirect to "/movies/#{movie.uuid}"
+	Stalker.enqueue(
+		'movie.create', 
+		{ 
+			:tempfile => params[:file][:tempfile].path,
+			:title => params[:title],
+			:description => params[:description],
+			:extension => File.extname(params[:file][:filename])
+		})
+	# movie = Movie.create(params[:file][:tempfile].path, :title => params[:title], :description => params[:description], :extension => File.extname(params[:file][:filename]) )
+	redirect to "/movies"
 end
 
 get '/?' do
