@@ -5,7 +5,7 @@ A simple Sinatra webapp to generate and display thumbnails from QuickTime movie 
 
 ## Requirements
 
-Tomlen leverages Apple's Podcast Producer middleware and is therefore OSX only.
+Tomlen leverages Apple's Podcast Producer middleware and is therefore OSX only, using the system Ruby installation (for RubyCocoa support).
 
 ## Installation
 
