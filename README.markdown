@@ -11,9 +11,11 @@ Tomlen leverages Apple's Podcast Producer middleware and is therefore OSX only, 
 
 * Download and install [homebrew](https://github.com/mxcl/homebrew)
 * Install git: `brew install git`
+* Install beanstalk: `brew install beanstalk`
 * Install tomlen: `git clone git://github.com/jamiehodge/tomlen.git`
 * Install bundler: `sudo gem install bundler`
 * Install gems: `cd tomlen`, `bundle install`
+* Run beanstalk worker: `stalk jobs.rb`
 * Run tomlen: `arch -arch i386 rackup`
 * Open browser: [http://localhost:9292](http://localhost:9292)
 
