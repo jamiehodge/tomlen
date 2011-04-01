@@ -1,18 +1,16 @@
-%nav
-	%ul
-		%li
-			%a{ :href => url('/movies/new') } Upload a movie
-			
-%h1 Movie Index
+%h1 Index
 - if @movies.empty?
 	There are currently no movies available. Please upload a movie.
 - else
 	%ul
 		- @movies.each do |movie|
 			%li
-				%a{ :href => url("/movies/#{movie.uuid}") }= movie.title
-				%small
-					%form{ :action => url("/movies/#{movie.uuid}"), :method => "post", :style => 'display: inline;' }
+				%a{ :href => url("/movie/#{movie.uuid}") }= movie.uuid
+				- if movie.thumbnail_urls.empty? || movie.posterframe_urls.empty?
+					%form{ :action => url("/movie/#{movie.uuid}/generate"), :method => 'get', :style => 'display: inline;' }
+						%input{ :type => 'submit', :value => 'Generate' }
+				- else
+					%form{ :action => url("/movie/#{movie.uuid}"), :method => "post", :style => 'display: inline;' }
 						%input{ :type => 'hidden', :name => '_method', :value => 'delete' }
 						%input{ :type => 'submit', :value => 'Delete' }
 
@@ -21,10 +19,6 @@
 	yepnope([{
 		load: 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'
 	},{
-		load: '#{url('/js/jquery.iskip.js')}',
-		complete: function() {
-			setInterval(function() {
-				$("#main").load('#{url('/movies')}');
-			}, 9000);
+		load: '#{url('/js/jquery.iskip.js')}'
 		}
-	}]);
+	}])

@@ -1,5 +1,6 @@
 $:.unshift File.expand_path('lib')
 require 'movie'
+require 'open-uri'
 
 timeout = 0
 while (timeout < 5)
@@ -11,11 +12,11 @@ exit(1) if timeout == 5
 
 include Stalker
 
-job 'movie.create' do |params|
-	Movie.create(
-		params['tempfile'], 
-		:title => params['title'], 
-		:description => params['description'], 
-		:extension => params['extension']
-	)
+job 'movie.generate_previews' do |params|
+	success = Movie.new(params['id']).create_thumbnails && Movie.new(params['id']).create_posterframes
+	if success
+		puts open(params['success'] + params['id']).read
+	else
+		puts open(params['failure'] + params['id']).read
+	end
 end

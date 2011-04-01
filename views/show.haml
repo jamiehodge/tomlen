@@ -1,25 +1,46 @@
-%nav
-	%ul
-		%li
-			%a{ :href => url('/movies') } Back to Index
-			
-%h1= @movie.title
+%h1 Movie: #{@movie.uuid}
 
 %section
-	%h2 Preview
-	%img#preview{:src => @movie.thumbnail_urls.first, :width => 400 }
+	%h2 Previews
+	- if @movie.thumbnail_urls.empty?
+		%p
+			%form{ :action => url("/movie/#{@movie.uuid}/generate"), :method => 'get' }
+				%input{ :type => 'submit', :value => 'Generate' }
+	- else
+		%p
+			%form{ :action => url("/movie/#{@movie.uuid}"), :method => "post", :style => 'display: inline;' }
+				%input{ :type => 'hidden', :name => '_method', :value => 'delete' }
+				%input{ :type => 'submit', :value => 'Delete' }
+				
+	- unless @movie.thumbnail_urls.empty?
+		%img#thumbnail_preview{:src => @movie.thumbnail_urls[1], :width => 150 }
+	- unless @movie.posterframe_urls.empty?
+		%img#posterframe_preview{:src => @movie.posterframe_urls[1], :width => @movie.width }
 
 %section
 	%h2 Download
 	%ul
 		%li
 			%a{ :href => @movie.original_url } Original
-		%li#thumbnails
-			Thumbnails
-			%ol
-				- @movie.thumbnail_urls.each do |thumbnail|
-					%li
-						%a{ :href => thumbnail }= thumbnail.split('/').last
+		- unless @movie.thumbnail_urls.empty?
+			%li#thumbnails
+				Thumbnails
+				%ol
+					- @movie.thumbnail_urls.each do |thumbnail|
+						%li
+							%a{ :href => thumbnail }= thumbnail.split('/').last
+		- unless @movie.posterframe_urls.empty?
+			%li#posterframes
+				Posterframes
+				%ol
+					- @movie.posterframe_urls.each do |posterframe|
+						%li
+							%a{ :href => posterframe }= posterframe.split('/').last
+						
+%nav
+	%ul
+		%li
+			%a{ :href => url('/movies') } Back to Index
 
 :javascript
 	yepnope([{
@@ -27,7 +48,8 @@
 	},{
 		load: '#{url('/js/jquery.iskip.js')}',
 		complete: function() {
-			$('#preview').iskip({images: $('#thumbnails li a'), method: 'mousemove' });
+			$('#thumbnail_preview').iskip({images: $('#thumbnails li a'), method: 'mousemove' });
+			$('#posterframe_preview').iskip({images: $('#posterframes li a'), method: 'mousemove' });
 		}
 	}]);
 	

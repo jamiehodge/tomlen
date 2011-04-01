@@ -2,22 +2,14 @@
 
 $:.unshift '/usr/lib/podcastproducer'
 require 'qt/qt'
+require 'qt_extensions'
 require 'yaml'
 
 class Movie
 	
 	attr_reader :uuid
 	
-	NUMBER_OF_THUMBNAILS = 10
-	
-	def self.create(input, metadata={})
-		self.new(`uuidgen`.strip) do
-			create_directories
-			save_metadata(metadata)
-			save_original(input)
-			create_thumbnails
-		end
-	end
+	NUMBER_OF_PREVIEWS = 10
 	
 	def initialize(uuid, &block)
 		@uuid = uuid
@@ -25,59 +17,75 @@ class Movie
 	end
 	
 	def base_dir
-		File.join 'public', 'movies', uuid
+		File.join 'public', 'movies', settings['library']['dir_prefix'] + uuid
 	end
 	
 	def base_url
-		File.join '/', 'movies', uuid
+		File.join '/', 'movie', uuid
 	end
 	
 	def thumbnails_dir
-		File.join base_dir, 'thumbnails'
+		File.join base_dir, settings['library']['thumbnail_dir']
 	end
 	
 	def thumbnail_urls
-		(0..(NUMBER_OF_THUMBNAILS-1)).map { |i| File.join(base_url, 'thumbnails', '%.2d.png' % i) }
+		Dir.glob("#{thumbnails_dir}/*.png").collect { |f| File.join(base_url, 'thumbnail', File.basename(f, '.png')) }
+	end
+	
+	def posterframes_dir
+		File.join base_dir, settings['library']['posterframe_dir']
+	end
+	
+	def posterframe_urls
+		Dir.glob("#{posterframes_dir}/*.png").collect { |f| File.join(base_url, 'posterframe', File.basename(f, '.png')) }
 	end
 	
 	def original
-		File.join base_dir, "#{uuid}#{metadata[:extension]}"
+		Dir.glob(File.join base_dir, settings['library']['original_dir'], "#{uuid}.*").first
 	end
 	
 	def original_url
-		File.join base_url, "#{uuid}#{metadata[:extension]}"
+		File.join base_url, 'original'
 	end
 	
 	def duration
-		@duration ||= PcastQT.info(original)['duration'].to_f
+		info['duration'].to_f
 	end
 	
-	def title
-		metadata[:title]
+	def width
+		info['width'].to_f
+	end
+	
+	def height
+		info['height'].to_f
+	end
+	
+	def create_thumbnails(w=150)
+		create_previews do |time,count|
+			PcastQT.thumbnail(original, File.join(thumbnails_dir, '%.2d.png' % count), 'public.png', time, w, (w / width) * height)
+		end
+	end
+	
+	def create_posterframes
+		create_previews do |time,count|
+			PcastQT.posterimage(original, File.join(posterframes_dir, '%.2d.png' % count), 'public.png', time)
+		end
 	end
 	
 	private
 	
-	def create_directories
-		FileUtils.mkdir_p(thumbnails_dir)
+	def settings
+		YAML.load_file('settings.yml')
 	end
 	
-	def save_original(input)
-		FileUtils.cp input, original
+	def info
+		PcastQT.info(original)
 	end
 	
-	def save_metadata(metadata)
-		File.open(File.join(base_dir, 'metadata.yml'), 'w') { |f| YAML.dump( metadata, f ) }
-	end
-	
-	def metadata
-		@metadata ||= YAML.load( File.open(File.join(base_dir, 'metadata.yml')) )
-	end
-	
-	def create_thumbnails
+	def create_previews
 		count = 0
-		(0..duration).step(duration/(NUMBER_OF_THUMBNAILS-1)) do |time|
-			PcastQT.posterimage(original, File.join(thumbnails_dir, '%.2d.png' % count), 'public.png', time)
+		(0..duration).step(duration/(NUMBER_OF_PREVIEWS-1)) do |time|
+			yield(time,count)
 			count += 1
 		end
 	end

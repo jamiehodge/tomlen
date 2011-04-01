@@ -1,0 +1,11 @@
+---
+  library:
+    base_dir: /Volumes/Documents
+    dir_prefix: id-
+    original_dir: original
+    posterframe_dir: imagePreviews
+    thumbnail_dir: imageThumbnails
+  callback:
+    success: http://example.com/success?id=
+    failure: http://example.com/fail?id=
+    
