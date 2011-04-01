@@ -39,7 +39,6 @@ post '/movies' do
 			:description => params[:description],
 			:extension => File.extname(params[:file][:filename])
 		})
-	# movie = Movie.create(params[:file][:tempfile].path, :title => params[:title], :description => params[:description], :extension => File.extname(params[:file][:filename]) )
 	redirect to "/movies"
 end
 
